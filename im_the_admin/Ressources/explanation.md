@@ -13,7 +13,6 @@
 cookie_name = f9aaa3ea3513c13f9b02dac9c6a580b8
 
 
-*(replace `cookie_name` with the actual cookie key from your lab)*  
 - Hypothesized the server accepts a hashed boolean/token in the cookie (e.g., hash("false")) and trusts it.  
 - Performed quick tests by changing the cookie to random values and reloading — no access until a correct hash was provided.
 
