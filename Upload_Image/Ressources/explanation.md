@@ -63,13 +63,6 @@ curl -X POST \
 3. **No extension whitelist** → Accepts dangerous `.php` files
 4. **Potential RCE** → If uploads stored in executable directory
 
-**Attack flow:**
-```
-Upload PHP file → Intercept request → Change Content-Type to image/jpeg
-   ↓
-Server validates header only → Accepts file → Potential code execution
-```
-
 **Related:**
 - CWE-434: Unrestricted Upload of File with Dangerous Type
 - OWASP A08:2021 – Software and Data Integrity Failures
@@ -116,11 +109,6 @@ imagejpeg($img, $dest, 90);
 3. **File size limits** (5MB max)
 4. **Logging and monitoring**
 
-**Testing:**
-```bash
-# Should fail after fixes
-curl -F "uploaded=@shell.php;type=image/jpeg" http://192.168.1.16/index.php?page=upload
-```
 
 ## References
 

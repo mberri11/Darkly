@@ -51,15 +51,6 @@ b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2
 4. **Credentials in GET** → Exposed in URLs/logs
 5. **No CAPTCHA** → No bot protection
 
-**Attack flow:**
-```
-Hydra sends thousands of password attempts
-   ↓
-Server responds with WrongAnswer.gif on failure
-   ↓
-Tool detects missing failure marker → reports success
-```
-
 ## How to Fix It
 
 **Immediate fixes:**

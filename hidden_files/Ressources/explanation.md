@@ -65,13 +65,6 @@ d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff
 3. **Weak MD5 hashing** → No salt, easily cracked with rainbow tables
 4. **Weak password** → Common password in breach databases
 
-**Attack flow:**
-```
-Directory listing → Download htpasswd → Crack MD5 hash
-   ↓
-Recover password → Login to admin → Access granted
-```
-
 **Related:**
 - CWE-548: Directory Listing
 - CWE-522: Insufficiently Protected Credentials
