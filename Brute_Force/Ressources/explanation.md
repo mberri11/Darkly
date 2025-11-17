@@ -94,11 +94,6 @@ if ($user->failed_attempts >= 5) {
 
 5. **Use Argon2id/bcrypt for password hashing**
 
-**Testing:**
-```bash
-# Should fail or be heavily rate-limited
-hydra -l admin -P ~/wordlists/rockyou.txt 192.168.1.16 http-get-form "..."
-```
 
 ## References
 

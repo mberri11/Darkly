@@ -48,7 +48,6 @@ curl 'http://192.168.1.16/index.php?page=survey' \
 1. **Client-side validation only** → HTML restricts dropdown values, but server doesn't verify
 2. **No input range checking** → Accepts any integer value
 3. **Trusts client data** → No server-side whitelist validation
-4. **Business logic flaw** → Rating scale bypassed (1-10 expected)
 
 **Potential impacts:**
 - Poll/voting manipulation
@@ -67,13 +66,14 @@ curl 'http://192.168.1.16/index.php?page=survey' \
 **Immediate fixes:**
 
 1. **Server-side range validation:**
-```php
+add some small descrption....or maybe remove it all
+"```php
 $allowed_subjects = [1, 2, 3];
 $allowed_values = range(1, 10);
 
 if (!in_array($_POST['sujet'], $allowed_subjects)) die("Invalid subject");
 if (!in_array($_POST['valeur'], $allowed_values)) die("Invalid rating");
-```
+```"
 
 2. **Type and range checking:**
 ```php
@@ -123,17 +123,8 @@ if ($valeur < 1 || $valeur > 10) {
 
 4. **Require authentication** before survey submission
 
-**Testing:**
-```bash
-# Should fail
-curl -X POST -d "sujet=2&valeur=42" http://192.168.1.16/index.php?page=survey
-
-# Should succeed
-curl -X POST -d "sujet=2&valeur=8" http://192.168.1.16/index.php?page=survey
-```
 
 ## References
-
 - OWASP Input Validation Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html
 - CWE-20: Improper Input Validation — https://cwe.mitre.org/data/definitions/20.html
 - CWE-602: Client-Side Enforcement — https://cwe.mitre.org/data/definitions/602.html

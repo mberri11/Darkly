@@ -90,12 +90,6 @@ setcookie("auth", $value, [
 3. **Session expiration & rotation**
 4. **Monitor for suspicious cookie values**
 
-**Testing:**
-```bash
-# Should fail after fixes
-curl -b "I_am_admin=b326b5062b2f0e69046810717534cb09" http://192.168.1.16/
-```
-
 ## References
 
 - OWASP Session Management Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
