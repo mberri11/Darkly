@@ -6,6 +6,7 @@
 - Opened DevTools → Application → Cookies
 - Found suspicious cookie: `I_am_admin=68934a3e9455fa72420237eb05902327`
 - Recognized as MD5 hash (32 hex characters)
+- decrypted value: `false`
 - Hypothesis: Server trusts client-controlled cookie value
 
 ## How I Exploited It

@@ -38,7 +38,6 @@ curl 'http://192.168.1.16/index.php?page=survey' \
 2. **No range validation** → Accepts any integer
 3. **Trusts client data** → No server-side verification
 
-**Impacts:** Poll manipulation, data integrity issues, statistics skewing
 
 ## How to Fix It
 
@@ -49,7 +48,6 @@ curl 'http://192.168.1.16/index.php?page=survey' \
 2. **Whitelist validation** - Only accept expected values
 3. **Type checking** - Ensure integer, not string/injection
 4. **Rate limiting** - Prevent spam submissions
-5. **CSRF tokens** - Prevent forged requests
 
 
 ## References
