@@ -68,25 +68,7 @@ echo -n '<svg onload=alert(42)>' | base64
 2. **Block data URIs** - Reject `data:` scheme
 3. **Output escaping** - Use `htmlspecialchars()` for all output
 4. **Content-Security-Policy** - Prevent inline scripts
-5. **HTTPOnly cookies** - Protect session cookies from JavaScript
 
-**Example:**
-```php
-// ✗ BAD - Direct output
-echo "<img src='" . $_GET['src'] . "' />";
-
-// ✓ GOOD - Whitelist + escape
-$allowed = ['nsa', 'obama', 'trump'];
-$src = $_GET['src'] ?? '';
-if (in_array($src, $allowed)) {
-    echo "<img src='" . htmlspecialchars($src, ENT_QUOTES) . "' />";
-}
-
-// Block data URIs
-if (preg_match('/^data:/i', $_GET['src'])) {
-    die("Data URIs not allowed");
-}
-```
 
 ## References
 

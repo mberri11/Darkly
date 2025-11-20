@@ -72,8 +72,6 @@ d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff
 4. **Weak MD5 hashing** → No salt, easily cracked
 5. **Weak password** → Common password in breach databases
 
-**The irony:** robots.txt says "don't look here" → Attackers look first!
-
 ## How to Fix It
 
 **Core principle:** Don't expose file structure. Protect sensitive files. Use strong hashing.
@@ -83,8 +81,7 @@ d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff
 2. **Remove/secure htpasswd** - Store outside web root with 600 permissions
 3. **Use bcrypt/Argon2** - Replace MD5 with modern hashing
 4. **Strong passwords** - Enforce complexity requirements
-5. **Don't rely on robots.txt** - Not a security mechanism
-6. **Multi-Factor Authentication** - Protect admin access
+5. **Multi-Factor Authentication** - Protect admin access
 
 
 ## References

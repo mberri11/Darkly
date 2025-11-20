@@ -58,7 +58,6 @@ curl -X POST -F "Upload=Upload" \
 3. **Rename files** - Random names prevent direct access
 4. **Disable execution** - PHP can't run in upload directory
 5. **Store outside web root** - Uploads not directly accessible
-6. **File size limits** - Prevent resource exhaustion
 
 ## References
 

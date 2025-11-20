@@ -39,8 +39,7 @@ b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2
 1. **Predictable failure response** → Easy to detect success/failure
 2. **No rate limiting** → Unlimited attempts from same IP
 3. **No account lockout** → No temporary blocking after failures
-4. **Credentials in GET** → Exposed in URLs/logs
-5. **No CAPTCHA** → No bot protection
+4. **No CAPTCHA** → No bot protection
 
 ## How to Fix It
 
@@ -50,11 +49,9 @@ b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2
 1. **Rate limiting** - Max 5 login attempts per minute per IP
 2. **Account lockout** - Lock account for 15 minutes after 5 failed attempts  
 3. **CAPTCHA** - Require after 3 failed attempts
-4. **Use POST** - Never send credentials in URL
-5. **Generic errors** - Don't reveal if username exists
-6. **Strong passwords** - Enforce minimum complexity
-7. **Multi-Factor Authentication** - Best protection against brute force
-
+4. **Generic errors** - Don't reveal if username exists
+5. **Strong passwords** - Enforce minimum complexity
+6. **Multi-Factor Authentication** - Best protection against brute force
 
 ## References
 

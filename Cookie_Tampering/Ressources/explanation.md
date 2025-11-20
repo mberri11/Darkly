@@ -45,7 +45,7 @@ df2eb4ba34ed059a1e3e89ff4dfc13445f104a1a52295214def1c4fb1693a5c3
 **Essential fixes:**
 1. **Server-side sessions** - Store user state in server database/memory, not cookies
 2. **Signed cookies** - Use HMAC to verify cookie integrity
-3. **Secure cookie flags** - HttpOnly, Secure, SameSite
+3. **Secure cookie flags** - Secure(HTTPS only), SameSite
 4. **Opaque tokens** - Use random session IDs, not readable data
 
 ## References
